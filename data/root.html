@@ -1,0 +1,155 @@
+
+<link href="nouislider.min.css" rel="stylesheet">
+<script src="nouislider.min.js"></script>
+
+<style type="text/css">
+	.before-example ~ .example {
+		margin-top: 0;
+	}
+
+	.example.vertical {
+		width: 120px;
+	}
+	.example {
+		position: relative;
+		padding: 40px 0px 0px 28px;
+		height: 300px;
+		display: inline-block;
+	}
+</style>
+
+<a href="/_ac">AutoConnect</a>
+
+<div>
+	
+	<div class="example vertical" style="float: left">
+		<div class="pips-range" id="pips-range-vertical-1"></div>
+	</div>
+
+	<div class="example vertical" style="">
+		<div class="pips-range" id="pips-range-vertical-2"></div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	var pipsRangeVertical1 = document.getElementById('pips-range-vertical-1');
+	var pipsRangeVertical2 = document.getElementById('pips-range-vertical-2');
+
+	noUiSlider.create(pipsRangeVertical1, {
+		range: {
+			min: 0,
+			max: 4095
+		},
+		start: {{S1}},
+		orientation: 'vertical',
+		pips: {
+			mode: 'count',
+			values: 9
+		}
+	});
+
+	noUiSlider.create(pipsRangeVertical2, {
+		range: {
+			min: 0,
+			max: 4095
+		},
+		start: {{S2}},
+		orientation: 'vertical',
+		pips: {
+			mode: 'count',
+			values: 9
+		}
+	});
+
+	var pips1 = pipsRangeVertical1.querySelectorAll('.noUi-value');
+	var pips2 = pipsRangeVertical2.querySelectorAll('.noUi-value');
+
+	function clickOnPip1() {
+		var value = Number(this.getAttribute('data-value'));
+		pipsRangeVertical1.noUiSlider.set(value);
+	}
+	function clickOnPip2() {
+		var value = Number(this.getAttribute('data-value'));
+		pipsRangeVertical2.noUiSlider.set(value);
+	}
+
+	for (var i = 0; i < pips1.length; i++) {
+		pips1[i].style.cursor = 'pointer';
+		pips1[i].addEventListener('click', clickOnPip1);
+	}
+
+	for (var i = 0; i < pips2.length; i++) {
+		pips2[i].style.cursor = 'pointer';
+		pips2[i].addEventListener('click', clickOnPip2);
+	}
+
+    var sendS1 = throttle(function (values, handle) {
+		httpGetAsync("/sdrive/s1?v="+Math.round(parseFloat(values[handle])), function () {});
+	}, 150);
+
+    var sendS2 = throttle(function (values, handle) {
+		httpGetAsync("/sdrive/s2?v="+Math.round(parseFloat(values[handle])), function () {});
+	}, 150);
+
+	pipsRangeVertical1.noUiSlider.on("update", sendS1);
+
+	pipsRangeVertical2.noUiSlider.on("update", sendS2);
+
+	function httpGetAsync(theUrl, callback)	{
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.onreadystatechange = function() { 
+			if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {callback(xmlHttp.responseText);}
+		};
+		xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+		xmlHttp.send(null);
+	}
+
+	function debounce(f, ms) {
+
+		let timer = null;
+
+		return function (...args) {
+			const onComplete = () => {
+				f.apply(this, args);
+				timer = null;
+			}
+
+			if (timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout(onComplete, ms);
+		};
+	}
+
+	function throttle(func, ms) {
+
+		var isThrottled = false,
+		savedArgs,
+		savedThis;
+
+		function wrapper() {
+
+		    if (isThrottled) { // (2)
+		    	savedArgs = arguments;
+		    	savedThis = this;
+		    	return;
+		    }
+
+		    func.apply(this, arguments); // (1)
+
+		    isThrottled = true;
+
+		    setTimeout(function() {
+		      isThrottled = false; // (3)
+		      if (savedArgs) {
+		      	wrapper.apply(savedThis, savedArgs);
+		      	savedArgs = savedThis = null;
+		      }
+			}, ms);
+		}
+
+		return wrapper;
+	}
+</script>

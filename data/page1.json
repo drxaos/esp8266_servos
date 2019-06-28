@@ -1,0 +1,44 @@
+[
+  {
+    "title" : "Home",
+    "uri" : "/",
+    "menu" : true,
+    "element" : [
+      {
+        "name" : "title",
+        "type" : "ACText",
+        "value" : "hello"
+      }
+    ]
+  },
+  {
+    "title" : "SDrive",
+    "uri" : "/sdrive",
+    "menu" : true,
+    "element" : [
+      {
+        "name" : "title",
+        "type" : "ACText",
+        "value" : "<h2>SDrive control</h2>"
+      },
+      {
+        "name" : "s1",
+        "type" : "ACInput",
+        "label" : "servo1",
+        "value" : "0"
+      },
+      {
+        "name" : "s2",
+        "type" : "ACInput",
+        "label" : "servo2",
+        "value" : "0"
+      },
+      {
+        "name" : "apply",
+        "type" : "ACSubmit",
+        "value": "Apply",
+        "uri" : "/sdrive/apply"
+      }
+    ]
+  }
+]
