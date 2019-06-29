@@ -4,6 +4,7 @@
 
 #define AC_DEBUG
 #define DEBUG
+#define ENABLE_DEBUG_OUTPUT
 
 void setup() {
   Serial.begin(115200);
@@ -43,7 +44,45 @@ void loop() {
     m.trim();
 
     if (m == "mov") {
-      //mov();
+      int x = Serial.parseInt();
+      int y = Serial.parseInt();
+      mov(x, y);
+    }
+
+    if (m == "write") {
+      int n = Serial.parseInt();
+      int on = Serial.parseInt();
+      int off = Serial.parseInt();
+      pwmWrite(n, on, off);
+    }
+
+    if (m == "read") {
+      int n = Serial.parseInt();
+      pwmRead(n);
+    }
+
+    if (m == "begin") {
+      pwmBegin();
+    }
+
+    if (m == "freq") {
+      int f = Serial.parseInt();
+      pwmFreq(f);
+    }
+
+    if (m == "output") {
+      int n = Serial.parseInt();
+      int v = Serial.parseInt();
+      pinMode(n, OUTPUT);
+      digitalWrite(n, v);
+      Serial.printf("output: %d = %d\n", n, v);
+    }
+
+    if (m == "input") {
+      int n = Serial.parseInt();
+      pinMode(n, INPUT);
+      int v = digitalRead(n);
+      Serial.printf("input: %d = %d\n", n, v);
     }
 
     while (Serial.available()) {
@@ -53,4 +92,5 @@ void loop() {
     analogWrite(D4, 999);
   }
 
+  yield();
 }

@@ -22,7 +22,7 @@
 
 <div>
 	
-	<div class="example vertical" style="float: left">
+	<div class="example vertical" style="">
 		<div class="pips-range" id="pips-range-vertical-1"></div>
 	</div>
 
@@ -38,27 +38,27 @@
 
 	noUiSlider.create(pipsRangeVertical1, {
 		range: {
-			min: 0,
-			max: 4095
+			min: 100,
+			max: 600
 		},
 		start: {{S1}},
 		orientation: 'vertical',
 		pips: {
 			mode: 'count',
-			values: 9
+			values: 10
 		}
 	});
 
 	noUiSlider.create(pipsRangeVertical2, {
 		range: {
-			min: 0,
-			max: 4095
+			min: 100,
+			max: 600
 		},
 		start: {{S2}},
 		orientation: 'vertical',
 		pips: {
 			mode: 'count',
-			values: 9
+			values: 10
 		}
 	});
 
